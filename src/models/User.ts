@@ -1,18 +1,24 @@
-import bcrypt from "bcryptjs";
 import mongoose, { model, models, Schema } from "mongoose";
 
-export type IUser = {
+export interface IUser {
   email: string;
   password: string;
-  _id?: mongoose.Types.ObjectId;
+  id?: mongoose.Types.ObjectId;
   createdAt?: Date;
-  updatedAt?: Date;
-};
+  modifiedAt?: Date;
+}
 
 const userSchema = new Schema<IUser>(
   {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    email: {
+      type: String,
+      require: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      require: true,
+    },
   },
   {
     timestamps: true,
