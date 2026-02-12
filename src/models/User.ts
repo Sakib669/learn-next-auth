@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import mongoose, { model, models, Schema } from "mongoose";
 
 export interface IUser {
@@ -5,19 +6,19 @@ export interface IUser {
   password: string;
   id?: mongoose.Types.ObjectId;
   createdAt?: Date;
-  modifiedAt?: Date;
+  updatedAt?: Date;
 }
 
 const userSchema = new Schema<IUser>(
   {
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
   },
   {
@@ -30,7 +31,7 @@ userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  //   next();
+  // next();
 });
 
 const User = models?.User || model<IUser>("User", userSchema);
