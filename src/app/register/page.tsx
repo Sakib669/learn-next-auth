@@ -6,18 +6,36 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (password !== confirm) {
       alert("Password didn't match");
       return;
     }
+
+    const result = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await result.json();
+
+    if (data.ok) {
+      alert("User registered successfully");
+    }
+
     console.log({ email, password });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded shadow-md w-96"
+      >
         <h2 className="text-xl font-bold mb-4">Register</h2>
         <input
           type="email"
@@ -27,20 +45,23 @@ export default function Register() {
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          type="password"
+          type="text"
           placeholder="Password"
           className="w-full border p-2 mb-3 rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <input
-          type="password"
+          type="text"
           placeholder="Confirm Password"
           className="w-full border p-2 mb-4 rounded"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
-        <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-green-600 text-white p-2 rounded hover:cursor-pointer"
+        >
           Register
         </button>
       </form>

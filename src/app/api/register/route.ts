@@ -7,7 +7,7 @@ export const POST = async (req: NextRequest) => {
     // get the data from frontend request
     const { email, password } = await req.json();
 
-    connectDB();
+    await connectDB();
     // check if the user already exists
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
