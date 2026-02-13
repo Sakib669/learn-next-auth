@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any, req): Promise<any> {
+      async authorize(credentials: any): Promise<any> {
         await connectDB();
         const user = await User.findOne({ email: credentials?.email });
 
@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("No user found with this email");
         }
 
-        const isValid = bcrypt.compare(credentials!.password, user.password);
+        const isValid = await bcrypt.compare(credentials!.password, user.password);
         if (!isValid) throw new Error("Incorrect password");
 
         return { id: user._id, email: user.email };

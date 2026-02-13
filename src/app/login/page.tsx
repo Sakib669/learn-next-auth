@@ -5,14 +5,17 @@ import { useState } from "react";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
 
     const res = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirect: true,
+      callbackUrl: "/",
     });
 
     if (res?.error) {
@@ -20,6 +23,7 @@ export default function Login() {
     } else {
       console.log("Logged in successfully!");
       alert("Logged in successfully!");
+      setLoading(false);
     }
 
     console.log({ email, password });
@@ -48,9 +52,14 @@ export default function Login() {
         />
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-blue-600 text-white p-2 rounded hover:cursor-pointer"
         >
-          Login
+          {loading ? (
+            <span className="loading loading-spinner loading-md"></span>
+          ) : (
+            <span>Login</span>
+          )}
         </button>
       </form>
     </div>
