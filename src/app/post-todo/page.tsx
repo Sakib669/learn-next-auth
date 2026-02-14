@@ -1,65 +1,56 @@
 "use client";
+import { useSession } from "next-auth/react";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-import { useState } from "react";
-import { User, FileText } from "lucide-react";
+interface Props {}
 
-export default function InputAndTextarea() {
-  const [text, setText] = useState("");
-  const [description, setDescription] = useState("");
+type Inputs = {
+  name: string;
+  description: string;
+};
 
+const PostTodo = ({}: Props) => {
+  const { user } = useSession().data;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(user);
+    console.log(data);
+  };
   return (
-    <div className="min-h-screen bg-linear-to-b from-base-100 to-base-200 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* কার্ড */}
-        <div className="bg-base-100 rounded-lg shadow-2xl p-8">
-          <h2 className="text-2xl font-bold text-center mb-6">Input + Textarea</h2>
-          
-          <div className="space-y-6">
-            {/* টেক্সট ইনপুট ফিল্ড */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Text Input</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-base-content/40" />
-                </div>
-                <input
-                  type="text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  className="input input-bordered w-full pl-10"
-                  placeholder="Type something..."
-                />
-              </div>
-            </div>
+    <div className="flex flex-col justify-center items-center space-y-5 p-10 border rounded-xl border-primary min-h-screen">
+      <h2>Post Todo</h2>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="card bg-base-100 border-primary border-2 p-6 space-y-10 w-96 shadow-sm "
+      >
+        {/* register your input into the hook by invoking the "register" function */}
+        <input
+          placeholder="Enter the title"
+          className="input"
+          {...register("name", {
+            required: true,
+            minLength: 5,
+          })}
+        />
 
-            {/* টেক্সট এরিয়া */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Text Area</span>
-              </label>
-              <div className="relative">
-                <div className="absolute top-3 left-3 pointer-events-none">
-                  <FileText className="h-5 w-5 text-base-content/40" />
-                </div>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="textarea textarea-bordered w-full pl-10 min-h-30"
-                  placeholder="Write something longer..."
-                />
-              </div>
-            </div>
+        {/* include validation with required or other standard HTML validation rules */}
+        <textarea
+          className="textarea"
+          placeholder="Enter the description"
+          {...register("description", { required: true, minLength: 10 })}
+        ></textarea>
+        {/* errors will return when field validation fails  */}
+        {errors.description && <span>This field is required</span>}
 
-            {/* ডিসপ্লে ভ্যালু (অপশনাল) */}
-            <div className="mt-6 p-4 bg-base-200 rounded-lg">
-              <p className="text-sm font-medium">Text: {text || "—"}</p>
-              <p className="text-sm font-medium mt-2">Description: {description || "—"}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        <input className="btn btn-primary" type="submit" />
+      </form>
     </div>
   );
-}
+};
+
+export default PostTodo;

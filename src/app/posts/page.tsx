@@ -15,7 +15,9 @@ type PostsType = {
 
 export default function PostsPage() {
   const getPosts = async () => {
-    const res: PostsType[] = await (await fetch("/api/posts")).json();
+    const res: PostsType[] = await fetch("/api/posts").then((data) =>
+      data.json(),
+    );
     return res;
   };
   // const [posts, setPosts] = useState<PostsType[]>([]);
@@ -35,6 +37,9 @@ export default function PostsPage() {
         <h1 className="text-4xl font-bold text-center mb-12">Posts</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isLoading && (
+            <span className="loading loading-spinner text-primary w-1/3 "></span>
+          )}
           {posts?.map((post) => (
             <div key={post._id} className="card bg-base-100 shadow-xl">
               <div className="card-body">
