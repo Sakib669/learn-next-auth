@@ -6,6 +6,7 @@ interface IPost {
   _id?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  email: string;
 }
 
 const postSchema = new Schema<IPost>(
@@ -15,6 +16,10 @@ const postSchema = new Schema<IPost>(
       required: true,
     },
     description: {
+      type: String,
+      required: true,
+    },
+    email: {
       type: String,
       required: true,
     },

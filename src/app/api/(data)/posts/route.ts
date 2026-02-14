@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   const data = await req.json();
+  console.log(data)
   await connectDB();
   const result = await POSTS.create(data);
   if (!result) {

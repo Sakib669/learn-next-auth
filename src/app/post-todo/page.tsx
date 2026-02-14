@@ -1,5 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Props {}
@@ -10,16 +11,33 @@ type Inputs = {
 };
 
 const PostTodo = ({}: Props) => {
-  const { user } = useSession().data;
+  const session = useSession();
+  const email = session?.data?.user?.email;
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(user);
-    console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const { name, description } = data;
+    const post = { name, description, email };
+    setLoading(true);
+    const result = await fetch("/api/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(post),
+    });
+    if (!result.ok) {
+      throw new Error("Failed Posting that data");
+    }
+    setLoading(false);
+    alert("Data Posted");
+    reset();
   };
   return (
     <div className="flex flex-col justify-center items-center space-y-5 p-10 border rounded-xl border-primary min-h-screen">
@@ -34,7 +52,6 @@ const PostTodo = ({}: Props) => {
           className="input"
           {...register("name", {
             required: true,
-            minLength: 5,
           })}
         />
 
@@ -42,12 +59,16 @@ const PostTodo = ({}: Props) => {
         <textarea
           className="textarea"
           placeholder="Enter the description"
-          {...register("description", { required: true, minLength: 10 })}
+          {...register("description", { required: true })}
         ></textarea>
         {/* errors will return when field validation fails  */}
         {errors.description && <span>This field is required</span>}
 
-        <input className="btn btn-primary" type="submit" />
+        {loading ? (
+          <span className="loading loading-spinner loading-md mx-auto"></span>
+        ) : (
+          <input disabled={loading} className="btn btn-primary" type="submit" />
+        )}
       </form>
     </div>
   );
