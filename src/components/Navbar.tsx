@@ -41,7 +41,7 @@ const Navbar = ({}: Props) => {
               </li>
             )}
             <li>
-              <Link href={""}>Pricing</Link>
+              <Link href={"post-todo"}>Add a Todo</Link>
             </li>
             <li>
               <Link href={""}>Blog</Link>
@@ -64,7 +64,7 @@ const Navbar = ({}: Props) => {
             </li>
           )}
           <li>
-            <Link href={""}>Pricing</Link>
+            <Link href={"post-todo"}>Add a Todo</Link>
           </li>
           <li>
             <Link href={""}>Blog</Link>
