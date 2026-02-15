@@ -23,3 +23,20 @@ export const DELETE = async (req: NextRequest, { params }: Props) => {
 
   return NextResponse.json(res);
 };
+
+export const PATCH = async (req: NextRequest, { params }: Props) => {
+  const { id } = await params;
+  const updatedPost = await req.json();
+  await connectDB();
+  const res = await POSTS.findByIdAndUpdate(
+    id,
+    { $set: updatedPost },
+    { new: true, runValidators: true },
+  );
+
+  if (!res) {
+    return NextResponse.json("Invalid id or invalid data", { status: 404 });
+  }
+
+  return NextResponse.json(res);
+};

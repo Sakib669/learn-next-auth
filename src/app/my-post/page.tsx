@@ -1,5 +1,6 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface Props {}
 
@@ -85,6 +86,12 @@ const MyPosts = ({}: Props) => {
                   >
                     Delete this post
                   </button>
+                  <Link href={`/my-post/${post._id}`}
+                    className="btn btn-accent btn-sm"
+                    
+                  >
+                    Update
+                  </Link>
                 </div>
               </div>
             </div>
