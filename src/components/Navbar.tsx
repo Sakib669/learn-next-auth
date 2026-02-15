@@ -40,9 +40,11 @@ const Navbar = ({}: Props) => {
                 <Link href={"/my-post"}>My Posts</Link>
               </li>
             )}
-            <li>
-              <Link href={"post-todo"}>Add a Todo</Link>
-            </li>
+            {user?.user?.email && (
+              <li>
+                <Link href={"post-todo"}>Add a Todo</Link>
+              </li>
+            )}
             <li>
               <Link href={""}>Blog</Link>
             </li>
@@ -63,9 +65,12 @@ const Navbar = ({}: Props) => {
               <Link href={"/my-post"}>My Posts</Link>
             </li>
           )}
-          <li>
-            <Link href={"post-todo"}>Add a Todo</Link>
-          </li>
+          {user?.user?.email && (
+            <li>
+              <Link href={"post-todo"}>Add a Todo</Link>
+            </li>
+          )}
+
           <li>
             <Link href={""}>Blog</Link>
           </li>
